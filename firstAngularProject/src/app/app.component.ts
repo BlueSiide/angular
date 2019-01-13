@@ -1,48 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import 'rxjs';
 
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-	title = 'Mes appareils';
-	isAuth = false;
+export class AppComponent implements OnInit, OnDestroy {
 
-	lastUpdate = new Promise(
-		(resolve, reject) => {
-			const date = new Date();
-			setTimeout(
-				() => {
-					resolve(date);
-				}, 2000
-			)
-		}
-	);
+	secondes: number;
+	counterSubscription: Subscription;
 
-	appareils = [
-		{
-			name: 'Machine à laver',
-			status: 'allumé'
-		},
-		{
-			name: 'Télévision',
-			status: 'allumé'
-		},
-		{
-			name: 'Frigogidaire',
-			status: 'éteint'
-		}
-	];
+	constructor(){}
 
-	constructor() {
-		setTimeout(
-			() => {
-				this.isAuth = true;
-			}, 4000
+	ngOnInit() {
+		const counter = interval(1000);
+		this.counterSubscription = counter.subscribe(
+			(value: number) => {
+				this.secondes = value;
+			}
 		);
 	}
-	onAllumer() {
-		console.log('Tout est allumé');
+
+	ngOnDestroy() {
+		this.counterSubscription.unsubscribe();
 	}
 }
